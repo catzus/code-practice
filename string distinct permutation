@@ -1,0 +1,29 @@
+import numpy as np
+
+def word_f(str):
+    length = len(str)
+    factorial_num = np.math.factorial(length)
+    return factorial_num
+
+word = input("Enter the word: ")
+# length=len(word)
+# factorial_num = np.math.factorial(length)
+# print('Factorial of word is :', factorial_num)
+num = word_f(word)
+
+MAX_CHAR = 26
+def countDistinctPermutations(word):
+    length = len(word)
+    freq = [0] * MAX_CHAR
+    a = np.math.factorial(length)
+    for i in range(0, length):
+        if (word[i] >= 'a'):
+            freq[(ord)(word[i]) - 97] = freq[(ord)(word[i]) - 97] + 1;
+    for i in freq:
+        a /= np.math.factorial(i)
+        # a = a/...
+    print(freq)
+    return a
+
+
+print("The number of distinct arrangements =", countDistinctPermutations(word))
