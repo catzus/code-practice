@@ -1,0 +1,34 @@
+import numpy as np
+import matplotlib.pyplot as plt
+
+def birthday_problem_simulation(k: int):
+    assert k > 1, "k must be greater than 1"
+    name = "Earth" if k == 366 else "Martin"
+
+    def has_repeated_birthday(n: int) -> bool:
+        birthday_sample = np.random.choice(k, n, replace=True)
+        unique, counts = np.unique(birthday_sample, return_counts=True)
+        return any(counts > 1)
+
+    empirical_probability = []
+    theoretical_probability = []
+    for i in range(2, 61):
+        c = 0
+        for j in range(1000):
+            if has_repeated_birthday(i):
+                c += 1
+        empirical_probability.append(c / 1000)
+        theoretical_probability.append(1 - (np.math.factorial(k) / np.math.factorial(k - i)) / k ** i)
+
+    plt.title(f'Probability of at least one pair of same birthday for n people at {name}')
+    plt.xlabel('n ∈ [2, 60]')
+    plt.ylabel('probability')
+    plt.plot(range(2, 61), empirical_probability, label='X(n)')
+    plt.plot(range(2, 61), theoretical_probability, label='Y(n)')
+    plt.legend()
+    plt.show()
+
+birthday_problem_simulation(366)
+plt.pause(5)
+birthday_problem_simulation(670)
+plt.show()
