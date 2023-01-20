@@ -1,0 +1,60 @@
+def starday(k):
+    if k==366:
+        name='Earth'
+    else:
+        name='Martin'
+    def birthday(n):
+        array = np.random.randint(1, k, n)
+        # print(array)
+        list = array.tolist()
+        mylist = []
+
+        for i in array:
+            x = list.count(i)
+            if x > 1 and i not in mylist:
+                mylist.append(i)
+
+        if len(mylist) == 0:
+            print("False")
+        else:
+            print("True")
+            print(mylist)
+            return True
+        # return c/1000, y
+
+    listy = []
+    listx = []
+    for i in range(2, 61):
+        c = 0
+        for j in range(1000):
+
+            # print(i)
+            if birthday(i) == True:
+                c += 1
+        print(c / 1000)
+        y = 1 - (np.math.factorial(k) / np.math.factorial(k - i)) / k ** i
+        print(y)
+        listy.append(y)
+        listx.append(c / 1000)
+        print(listy)
+        print(listx)
+        listn = [n for n in range(2, 61)]
+        # z=len(listy)
+        # g=len(listx)
+        # print(z)
+        # print(g)
+    print(listy[23])
+    print(listn)
+    print(len(listn))
+    plt.title('Probability of at least one pair of same birthday for n people at '+ name)
+    plt.xlabel('n ∈ [2, 60]')
+    plt.ylabel('probability ')
+    plt.plot(listn, listx, label='X(n)')
+    plt.plot(listn, listy, label='Y(n)')
+    plt.legend()
+    plt.show()
+
+
+
+starday(366)
+starday(670)
