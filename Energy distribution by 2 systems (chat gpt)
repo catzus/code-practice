@@ -1,0 +1,36 @@
+import numpy as np
+from scipy.special import comb
+import matplotlib.pyplot as plt
+
+def microstates(energy, num_positions_A, num_positions_B, total_energy):
+    combinationA = comb(num_positions_A, energy)
+    combinationB = comb(num_positions_B, total_energy - energy)
+    total_combination = combinationA * combinationB
+    return total_combination
+
+def energy_distribution(num_positions_A, num_positions_B, total_energy):
+    frequency_list = []
+    energy_list = np.arange(1, total_energy+1)
+    for energy in energy_list:
+        frequency = microstates(energy, num_positions_A, num_positions_B, total_energy)
+        frequency_list.append(frequency)
+    frequency_list = np.array(frequency_list)
+    return energy_list, frequency_list
+
+def plot_distribution(energy_list, frequency_list):
+    plt.title('Energy Distribution')
+    plt.xlabel('Energy in position A')
+    plt.ylabel('Frequency')
+    plt.plot(energy_list, frequency_list)
+    plt.show()
+
+def average_energy(energy_list, frequency_list):
+    return np.dot(energy_list, frequency_list)/np.sum(frequency_list)
+
+num_positions_A = 11
+num_positions_B = 6
+total_energy = 7
+energy_list, frequency_list = energy_distribution(num_positions_A, num_positions_B, total_energy)
+plot_distribution(energy_list, frequency_list)
+average = average_energy(energy_list, frequency_list)
+print(average)
