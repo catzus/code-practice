@@ -1,0 +1,41 @@
+import numpy as np
+import matplotlib.pyplot as plt
+
+energystatea=3
+positionA=11
+positionB=6
+totalenergy=7
+
+frequencylist = []
+##number of microstates
+# n= number of position in A
+def microstate(energya):
+    combinationA = np.math.factorial(positionA) / (np.math.factorial(energya) * np.math.factorial(positionA - energya))
+    combinationB = np.math.factorial(positionB) / (np.math.factorial(totalenergy - energya) * np.math.factorial(positionB - (totalenergy - energya)))
+    totalcombination = combinationA * combinationB
+    return totalcombination
+
+
+for i in range(1,totalenergy+1):
+    microstate(i)
+    frequencylist.append(microstate(i))
+listx=list(range(1,totalenergy+1))
+print(listx)
+
+fraction=(330)/sum(frequencylist)
+print(fraction)
+print(frequencylist)
+plt.title('Distribution')
+plt.xlabel('energy in a')
+plt.ylabel('frequency')
+plt.plot(listx,frequencylist)
+plt.legend()
+plt.show()
+
+def dot(K, L):
+   if len(K) != len(L):
+      return 0
+
+   return sum(i[0] * i[1] for i in zip(K, L))
+average=dot(listx, frequencylist)/sum(frequencylist)
+print(average)
