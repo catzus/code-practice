@@ -1,0 +1,51 @@
+import numpy as np
+import matplotlib.pyplot as plt
+
+# initialize variables
+i = 0
+loops = []
+counts = {}
+
+trials = np.random.geometric(p=0.01, size=100000)
+
+for i in trials:
+    if i > 1000:
+        break
+    if i in counts:
+        counts[i] += 1
+    else:
+        counts[i] = 1
+
+
+print("Frequency of drawing 1 in i loops:", counts)
+
+plt.hist(list(counts.keys()), weights=list(counts.values()), bins=1000)
+plt.xlabel('number of time needed to draw 1')
+plt.ylabel('Frequency')
+plt.title('Histogram of Frequency of drawing 1 in i loops')
+plt.show()
+
+# create list of 1 to 1000
+listx = list(range(1,1001))
+
+# calculate pmf values
+listy = [0.01*(0.99)**(n-1) for n in listx]
+
+# plot graph
+plt.plot(listx, listy)
+plt.xlabel('n')
+plt.ylabel('pmf')
+plt.title('Probability mass function')
+plt.show()
+
+t = np.linspace(0, 10, 100)
+
+# compute y values
+y = np.exp(-t)
+
+# plot the function
+plt.plot(t, y)
+plt.xlabel('t')
+plt.ylabel('y')
+plt.title('y = exp(-t)')
+plt.show()
