@@ -8,7 +8,7 @@ radian_inpi = radians/np.pi
 radian_inpi_fraction = Fraction(radian_inpi).limit_denominator()
 
 print(degrees, "degrees = ", radians, "radians")
-print("The radian in radian_inpi = ", radian_inpi_fraction)
+print("The coefficient in radian_pi = ", radian_inpi_fraction)
 
 radians = float(input("Enter angle in radians: "))
 degrees = math.degrees(radians)
