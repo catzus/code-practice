@@ -1,0 +1,10 @@
+import numpy as np
+
+k = 8.617*10**-5
+T = 300
+e = -0.47
+u = -0.462
+
+P = np.exp(-(e-u)/(k*T))/(1+np.exp(-(e-u)/(k*T)))
+
+print(P)
