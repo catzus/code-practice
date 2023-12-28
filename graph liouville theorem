@@ -1,0 +1,294 @@
+# %% [markdown]
+# ## falling ball with linear drag
+
+# %%
+import numpy as np
+import matplotlib.pyplot as plt
+import matplotlib.animation as animation
+from scipy.integrate import solve_ivp
+
+# Constants
+g = 9.81
+k = 40
+m = 1
+linear_drag_coefficient = 0.1  # Linear drag coefficient
+
+# Define the ODE function for a ball with linear drag
+def linear_drag_ball_ODE(t, y):
+    return [y[1], g - (linear_drag_coefficient/m) * y[1]]
+
+# Generate 25 sets of initial conditions
+positions = np.linspace(0, 200, 5)
+velocities = np.linspace(0, 10, 5)
+
+initial_conditions = [(x, v) for x in positions for v in velocities]
+
+# Solve ODE for each set of initial conditions
+solutions = [solve_ivp(linear_drag_ball_ODE, t_span=(0, 150), y0=[x, v], t_eval=np.linspace(0, 150, 10 * 30)) for x, v in initial_conditions]
+
+# Animate the phase diagram for all 25 sets of initial conditions
+fig, ax = plt.subplots()
+
+phase_curve, = ax.plot([], [], 'b')
+phase_dots = [ax.plot([], [], 'ro')[0] for _ in range(25)]
+
+ax.set_title('Falling Ball with Drag - Phase Diagram')
+ax.set_xlim(-10, 10000)
+ax.set_ylim(-10, 200)
+ax.set_xlabel('Position (m)')
+ax.set_ylabel('Velocity (m/s)')
+ax.grid()
+
+# Calculate the interval for the desired duration
+duration = 10  # seconds
+num_frames = len(solutions[0].t)
+interval = duration * 1000 / num_frames  # Convert to milliseconds
+
+def animate(i):
+    phase_curve.set_data(solutions[0].y[0][:i], solutions[0].y[1][:i])
+    for j in range(25):
+        phase_dots[j].set_xdata(solutions[j].y[0][i])
+        phase_dots[j].set_ydata(solutions[j].y[1][i])
+
+ani = animation.FuncAnimation(fig, animate, frames=len(solutions[0].t), interval=interval)
+ani.save('fallingballwithdrag.gif', writer='pillow', fps=30)  # Set the frames per second
+
+# Uncomment the line below to save the animation as an MP4 file (requires ffmpeg)
+# ani.save('falling_ball_with_drag.mp4', writer='ffmpeg')
+plt.show()
+
+
+# %% [markdown]
+# ## DHO and SHO
+
+# %%
+g = 9.81
+k = 40
+m = 1
+b = 1  # Set to zero for no damping
+
+def spring_mass_friction_ODE(t, y):
+    return (y[1], g - k * y[0] / m - b * y[1] / m)
+
+# Generate 25 sets of initial conditions around (0, 0)
+positions = np.linspace(-0.01, 0.01, 5)
+velocities = np.linspace(-0.05, 0.2, 5)
+
+initial_conditions = [(x, v) for x in positions for v in velocities]
+
+# Solve ODE for each set of initial conditions
+solutions = [solve_ivp(spring_mass_friction_ODE, [0, 10], ic, t_eval=np.linspace(0, 10, 10 * 30)) for ic in initial_conditions]
+
+# Animate the phase diagram for all 25 sets of initial conditions
+fig, ax = plt.subplots()
+
+phase_curve, = ax.plot([], [], 'b')
+phase_dots = [ax.plot([], [], 'ro')[0] for _ in range(25)]
+
+ax.set_title('Spring Mass System - Phase Diagram')
+ax.set_xlim(-0.01, 0.45)
+ax.set_ylim(-1.2, 1.5)
+ax.set_xlabel(r'$x$ (m)')
+ax.set_ylabel(r'$\dot x$ (m/s)')
+ax.grid()
+
+def animate(i):
+    phase_curve.set_data(solutions[0].y[0][:i], solutions[0].y[1][:i])
+    for j in range(25):
+        phase_dots[j].set_xdata(solutions[j].y[0][i])
+        phase_dots[j].set_ydata(solutions[j].y[1][i])
+
+ani = animation.FuncAnimation(fig, animate, frames=len(solutions[0].t), interval=50)
+# Use the line below to save the animation as a GIF
+ani.save('phase_diagram_DHO.gif', writer='pillow')
+
+# Uncomment the line below to save the animation as an MP4 file (requires ffmpeg)
+# ani.save('phase_diagram_Liouville.mp4', writer='ffmpeg')
+
+plt.show()
+
+
+# %%
+g = 9.81
+k = 40
+m = 1
+b = 1  # Set to zero for no damping
+
+def spring_mass_ODE(t, y):
+    return (y[1], g - k * y[0] / m)
+
+# Generate 25 sets of initial conditions around (0, 0)
+positions = np.linspace(-0.01, 0.01, 5)
+velocities = np.linspace(-0.05, 0.2, 5)
+
+initial_conditions = [(x, v) for x in positions for v in velocities]
+
+# Solve ODE for each set of initial conditions
+solutions = [solve_ivp(spring_mass_ODE, [0, 10], ic, t_eval=np.linspace(0, 10, 10 * 30)) for ic in initial_conditions]
+
+# Animate the phase diagram for all 25 sets of initial conditions
+fig, ax = plt.subplots()
+
+phase_curve, = ax.plot([], [], 'b')
+phase_dots = [ax.plot([], [], 'ro')[0] for _ in range(25)]
+
+ax.set_title('Spring Mass System - Phase Diagram')
+ax.set_xlim(-0.2, 0.6)
+ax.set_ylim(-1.8, 1.8)
+ax.set_xlabel(r'$x$ (m)')
+ax.set_ylabel(r'$\dot x$ (m/s)')
+ax.grid()
+
+def animate(i):
+    phase_curve.set_data(solutions[0].y[0][:i], solutions[0].y[1][:i])
+    for j in range(25):
+        phase_dots[j].set_xdata(solutions[j].y[0][i])
+        phase_dots[j].set_ydata(solutions[j].y[1][i])
+
+ani = animation.FuncAnimation(fig, animate, frames=len(solutions[0].t), interval=50)
+# Use the line below to save the animation as a GIF
+ani.save('phase_diagram_SHO.gif', writer='pillow')
+
+# Uncomment the line below to save the animation as an MP4 file (requires ffmpeg)
+# ani.save('phase_diagram_Liouville.mp4', writer='ffmpeg')
+
+plt.show()
+
+
+# %% [markdown]
+# ## falling ball with quadratic drag
+
+# %%
+import numpy as np
+import matplotlib.pyplot as plt
+import matplotlib.animation as animation
+from scipy.integrate import solve_ivp
+
+# Constants
+g = 9.81
+k = 40
+m = 1
+quadratic_drag_coefficient = 0.1  # Quadratic drag coefficient
+
+# Define the ODE function for a ball with quadratic drag
+def quadratic_drag_ball_ODE(t, y):
+    return [y[1], g - (quadratic_drag_coefficient/m) * (y[1])**2]
+
+# Generate 25 sets of initial conditions
+positions = np.linspace(0, 5, 5)
+velocities = np.linspace(0, 5, 5)
+
+initial_conditions = [(x, v) for x in positions for v in velocities]
+
+# Solve ODE for each set of initial conditions
+solutions = [solve_ivp(quadratic_drag_ball_ODE, t_span=(0, 50), y0=[x, v], t_eval=np.linspace(0, 50, 10 * 20)) for x, v in initial_conditions]
+
+# Animate the phase diagram for all 25 sets of initial conditions
+fig, ax = plt.subplots()
+
+phase_curve, = ax.plot([], [], 'b')
+phase_dots = [ax.plot([], [], 'ro')[0] for _ in range(25)]
+
+ax.set_title('Falling Ball with Quadratic Drag - Phase Diagram')
+ax.set_xlim(-10, 40)
+ax.set_ylim(-10, 25)
+ax.set_xlabel('Position (m)')
+ax.set_ylabel('Velocity (m/s)')
+ax.grid()
+
+# Calculate the interval for the desired duration
+duration = 5  # seconds
+num_frames = len(solutions[0].t)
+interval = duration * 1000 / num_frames  # Convert to milliseconds
+
+def animate(i):
+    phase_curve.set_data(solutions[0].y[0][:i], solutions[0].y[1][:i])
+    for j in range(25):
+        phase_dots[j].set_xdata(solutions[j].y[0][i])
+        phase_dots[j].set_ydata(solutions[j].y[1][i])
+
+ani = animation.FuncAnimation(fig, animate, frames=len(solutions[0].t), interval=interval)
+ani.save('fallingballwithquadraticdrag.gif', writer='pillow', fps=30)  # Set the frames per second
+
+# Uncomment the line below to save the animation as an MP4 file (requires ffmpeg)
+# ani.save('falling_ball_with_quadratic_drag.mp4', writer='ffmpeg')
+plt.show()
+
+
+# %%
+import numpy as np
+import matplotlib.pyplot as plt
+from scipy.integrate import solve_ivp
+import matplotlib.animation as animation
+
+# Constants
+g = 9.81
+k = 40
+m = 1
+b = 1  # Set to zero for no damping
+
+def spring_mass_friction_ODE(t, y):
+    return (y[1], g - k * y[0] / m - b * y[1] / m)
+
+# Generate 25 sets of initial conditions around (0, 0)
+positions = np.linspace(-0.01, 0.01, 5)
+velocities = np.linspace(-0.05, 0.2, 5)
+
+initial_conditions = [(x, v) for x in positions for v in velocities]
+
+# Solve ODE for each set of initial conditions
+solutions = [solve_ivp(spring_mass_friction_ODE, [0, 10], ic, t_eval=np.linspace(0, 10, 10 * 30)) for ic in initial_conditions]
+
+# Initialize variables for area calculation
+areas = []
+
+fig, ax = plt.subplots()
+
+phase_curve, = ax.plot([], [], 'b')
+phase_dots = [ax.plot([], [], 'ro')[0] for _ in range(25)]
+
+ax.set_title('Spring Mass System - Phase Diagram')
+ax.set_xlim(-0.01, 0.45)
+ax.set_ylim(-1.2, 1.5)
+ax.set_xlabel(r'$x$ (m)')
+ax.set_ylabel(r'$\dot x$ (m/s)')
+ax.grid()
+
+def animate(i):
+    area_enclosed = 0
+    phase_curve.set_data(solutions[0].y[0][:i], solutions[0].y[1][:i])
+    for j in range(25):
+        phase_dots[j].set_xdata(solutions[j].y[0][i])
+        phase_dots[j].set_ydata(solutions[j].y[1][i])
+
+    # Calculate area enclosed using the shoelace formula
+    x_values = [solutions[j].y[0][i] for j in range(25)]
+    y_values = [solutions[j].y[1][i] for j in range(25)]
+
+    area_enclosed = 0.5 * np.abs(np.dot(x_values, np.roll(y_values, 1)) - np.dot(y_values, np.roll(x_values, 1)))
+    
+    areas.append(area_enclosed)
+
+ani = animation.FuncAnimation(fig, animate, frames=len(solutions[0].t), interval=50)
+ani.save('phase_diagram_DHO1.gif', writer='pillow')
+
+# Uncomment the line below to save the animation as an MP4 file (requires ffmpeg)
+# ani.save('phase_diagram_DHO.mp4', writer='ffmpeg')
+
+plt.show()
+
+# Plot the area vs time relationship
+plt.figure()
+plt.plot(solutions[0].t, areas, label='Area vs Time')
+plt.xlabel('Time (s)')
+plt.ylabel('Area')
+plt.title('Area vs Time Relationship')
+plt.legend()
+plt.grid(True)
+plt.show()
+
+
+# %%
+
+
+
